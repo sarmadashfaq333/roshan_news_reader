@@ -1,0 +1,7 @@
+[
+  {"id": 1, "title": "Welcome to Roshan Microfinance", "summary": "A short introduction for new staff.", "category": "Announcement", "date": "2026-11-01"},
+  {"id": 2, "title": "Updated Loan Policy 2026", "summary": "Key changes to the loan approval process.", "category": "Policy", "date": "2026-11-03"},
+  {"id": 3, "title": "Saving Basics for Families", "summary": "Simple tips on building a monthly saving habit.", "category": "Education", "date": "2026-11-05"},
+  {"id": 4, "title": "Office Timings in Winter", "summary": "New working hours from December.", "category": "Announcement", "date": "2026-11-07"},
+  {"id": 5, "title": "Understanding Interest Rates", "summary": "What interest means and how it is calculated.", "category": "Education", "date": "2026-11-09"}
+]
