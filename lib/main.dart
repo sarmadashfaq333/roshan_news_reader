@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'models/article.dart';
-
+import 'article_detail_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -20,6 +20,12 @@ class MyApp extends StatelessWidget {
         colorSchemeSeed: Colors.blue,
         useMaterial3: true,
       ),
+      routes: {
+        '/detail': (context) {
+          final article = ModalRoute.of(context)!.settings.arguments as Article;
+          return ArticleDetailScreen(article: article);
+        },
+      },
       home: const HomeScreen(),
     );
   }
@@ -63,7 +69,18 @@ class _HomeScreenState extends State<HomeScreen> {
           : ListView.builder(
         itemCount: _articles.length,
         itemBuilder: (context, index) {
-          return ListTile(title: Text(_articles[index].title));
+          return ListTile(
+            title: Text(_articles[index].title),
+            // Yahan se naya code shuru:
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                '/detail',
+                arguments: _articles[index], // Yahan index wala article pass kiya
+              );
+            },
+            // Naya code khatam
+          );
         },
       ),
     );
