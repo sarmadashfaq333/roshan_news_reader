@@ -17,9 +17,11 @@ class ArticleDetailScreen extends StatelessWidget {
             children: [
               Text(article.title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              Text('Category: ${article.category} | Date: ${article.date}', style: TextStyle(color: Colors.grey[600])),
+              Text('By ${article.author} | ${article.date}', style: TextStyle(color: Colors.grey[600])),
               const Divider(height: 30),
-              Text(article.summary, style: const TextStyle(fontSize: 16, height: 1.5)),
+              Text(article.body, style: const TextStyle(fontSize: 16, height: 1.5)),
+              const Divider(height: 30),
+
               const Divider(height: 30),
 
             ],
