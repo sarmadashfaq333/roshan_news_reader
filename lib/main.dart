@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-
+import 'dart:math';
 import 'models/article.dart';
 import 'article_detail_screen.dart';
 void main() {
@@ -45,44 +45,88 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadArticles();
+    fetchArticles();
   }
 
-  Future<void> _loadArticles() async {
-    final String jsonString =
-    await rootBundle.loadString('assets/articles.json');
-    final List<dynamic> jsonList = json.decode(jsonString) as List<dynamic>;
+  Future<void> fetchArticles() async {
     setState(() {
-      _articles = jsonList
-          .map((item) => Article.fromJson(item as Map<String, dynamic>))
-          .toList();
-      _isLoading = false;
+      _isLoading = true;
     });
+
+    // 2 second ka wait
+    await Future.delayed(const Duration(seconds: 2));
+
+    Random random = Random();
+    bool shouldFail = random.nextBool(); // 50% chance error
+
+    if (shouldFail) {
+      setState(() {
+        _isLoading = false;
+      });
+      // Error popup dikhayein
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Network Error'),
+          content: const Text('Failed to load articles. Please check your internet connection.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                fetchArticles(); // Dobara try karein
+              },
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Agar error nahi aaya to data load karein
+      final String jsonString = await rootBundle.loadString('assets/articles.json');
+      final List<dynamic> jsonList = jsonDecode(jsonString) as List<dynamic>;
+
+      setState(() {
+        _articles = jsonList.map((item) => Article.fromJson(item as Map<String, dynamic>)).toList();
+        _isLoading = false;
+      });
+    }
   }
 
   @override
+
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Roshan News')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-        itemCount: _articles.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(_articles[index].title),
-            // Yahan se naya code shuru:
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                '/detail',
-                arguments: _articles[index], // Yahan index wala article pass kiya
-              );
-            },
-            // Naya code khatam
-          );
+return Scaffold(
+  appBar: AppBar(
+    title: const Text('Roshan News'),
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.refresh),
+        onPressed: () {
+          fetchArticles();
         },
       ),
-    );
+    ],
+  ),
+body: _isLoading
+? const Center(child: CircularProgressIndicator())
+: RefreshIndicator(
+onRefresh: fetchArticles,
+child: ListView.builder(
+itemCount: _articles.length,
+itemBuilder: (context, index) {
+return ListTile(
+title: Text(_articles[index].title),
+onTap: () {
+Navigator.pushNamed(
+context,
+'/detail',
+arguments: _articles[index],
+);
+},
+);
+},
+),
+),
+);
   }
 }
